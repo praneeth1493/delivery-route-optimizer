@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Route Optimizer — Logistics Dashboard</title>
+    <meta name="theme-color" content="#0d1117">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div id="app" class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar-nav">
+            <div class="nav-logo">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="1" y="3" width="15" height="13"></rect>
+                    <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                    <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                    <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                </svg>
+            </div>
+            <nav>
+                <a href="#" class="active" title="Map View">🗺️</a>
+                <a href="#" title="Deliveries">📦</a>
+                <a href="#" title="Analytics">📊</a>
+                <a href="#" title="Settings">⚙️</a>
+            </nav>
+        </aside>
+
+        <!-- Main Dashboard Split -->
+        <main class="dashboard-main">
+            <!-- Left Section: Immersive Map (65%) -->
+            <section class="map-container">
+                <div id="map"></div>
+                
+                <!-- Floating Status Bar -->
+                <div class="status-bar glass">
+                    <span class="dot"></span>
+                    <span id="statusText">System Ready: Initializing Map</span>
+                </div>
+            </section>
+
+            <!-- Right Section: Control Panel (35%) -->
+            <aside class="control-panel scrollable-panel">
+                <header class="panel-header">
+                    <h1>Logistics Control Panel</h1>
+                    <p class="subtitle">Manage and optimize delivery routes in real-time</p>
+                </header>
+
+                <div class="panel-content">
+                    <!-- 0. AI Logistics Assistant -->
+                    <div class="panel-card ai-card" style="border-left: 4px solid #a855f7;">
+                        <h3 class="card-title" style="color: #a855f7;">🤖 AI Logistics Assistant</h3>
+                        <p class="instruction">Describe your delivery needs in natural language.</p>
+                        <div class="search-container" style="margin-top: 0.5rem; display: flex; gap: 0.5rem;">
+                            <input type="text" id="aiChatInput" class="search-input" placeholder="e.g. Send a truck to Elante Mall and Rose Garden..." autocomplete="off" style="flex: 1;">
+                            <button id="aiChatBtn" class="btn btn-primary" style="background: #a855f7; border: none;">Ask AI</button>
+                        </div>
+                    </div>
+
+                    <!-- 1. Location Search -->
+                    <div class="panel-card search-card">
+                        <h3 class="card-title">Location Search</h3>
+                        <div class="search-container">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" id="locationSearch" class="search-input" placeholder="Search for locations (e.g. Sukhna Lake)..." autocomplete="off">
+                            <ul id="autocompleteList" class="search-autocomplete glass"></ul>
+                        </div>
+                    </div>
+
+                    <!-- 2. Vehicle Selection -->
+                    <div class="panel-card status-card">
+                        <h3 class="card-title">Vehicle Selection</h3>
+                        <div class="vehicle-selection" id="vehicleSelect">
+                            <button class="vehicle-btn active" data-type="bike" title="Bike (40 km/l)">🏍️</button>
+                            <button class="vehicle-btn" data-type="van" title="Van (15 km/l)">🚐</button>
+                            <button class="vehicle-btn" data-type="pickup" title="Pickup (10 km/l)">🛻</button>
+                            <button class="vehicle-btn" data-type="truck" title="Truck (6 km/l)">🚛</button>
+                        </div>
+                        <div class="logistics-info-grid" style="margin-top: 1rem;">
+                            <div class="info-chip">
+                                <span class="label">Vehicle</span>
+                                <span class="value" id="currentVehicle">Bike</span>
+                            </div>
+                            <div class="info-chip">
+                                <span class="label">Status</span>
+                                <span class="value" id="systemStatus">Online</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Route Optimization -->
+                    <div class="panel-card actions-card">
+                        <h3 class="card-title">Route Optimization</h3>
+                        <p class="instruction">Select multiple delivery points on the map to begin.</p>
+                        <div class="actions">
+                            <button id="optimizeBtn" class="btn btn-primary" disabled>
+                                Optimize Route
+                            </button>
+                            <button id="analyticsBtn" class="btn btn-accent" style="display: none;">
+                                View Efficiency Analytics
+                            </button>
+                            <button id="resetBtn" class="btn btn-secondary">
+                                Reset View
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 4. Optimized Route Details -->
+                    <div class="panel-card details-card">
+                        <h3 class="card-title">Optimized Route Details</h3>
+                        <div class="stats-grid" id="routeStats" style="display: none;">
+                            <div class="stat-box">
+                                <span class="label">Total Distance</span>
+                                <span class="value" id="totalDistance">0.00 km</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="label">Est. Travel Time</span>
+                                <span class="value" id="estTime">0 mins</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="label">Fuel Consumed</span>
+                                <span class="value" id="fuelConsumed">0.00 L</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="label">Estimated Fuel Cost</span>
+                                <span class="value" id="fuelCost">₹0.00</span>
+                            </div>
+                        </div>
+                        
+                        <div id="aiInsightsBox" class="ai-insights-box glass" style="display: none; margin-top: 1rem; padding: 1rem; border-radius: 8px; border-left: 4px solid #a855f7; background: rgba(168, 85, 247, 0.1);">
+                            <h4 style="margin: 0 0 0.5rem 0; font-size: 0.85rem; color: #a855f7; display: flex; align-items: center; gap: 0.5rem;">
+                                <span>✨</span> AI Strategic Insight
+                            </h4>
+                            <p id="aiInsightsText" style="margin: 0; font-size: 0.8rem; color: #cbd5e1; line-height: 1.5;"></p>
+                        </div>
+
+                        <ul id="routeList" class="route-list">
+                            <li class="empty-state">No locations selected for current session.</li>
+                        </ul>
+                    </div>
+
+                    <!-- 5. Delivery Nodes (Priority Section) -->
+                    <div class="panel-card locations-management-card">
+                        <h3 class="card-title">Delivery Nodes</h3>
+                        <p class="instruction">Manage priorities and select nodes for optimization.</p>
+                        <div id="locationsList" class="locations-scroll-list">
+                            <!-- Locations will be injected here -->
+                            <div class="loading-text">Loading logistics nodes...</div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </main>
+
+        <!-- Modals & Overlays -->
+        <div id="loadingOverlay" class="loading-overlay">
+            <div class="loader"></div>
+            <p>Processing Optimal Logistics Path...</p>
+        </div>
+
+        <!-- Analytics Modal -->
+        <div id="analyticsModal" class="modal-overlay">
+            <div class="modal-content glass">
+                <div class="modal-header">
+                    <h2>Advanced Route Analytics</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <span class="metric-icon">⛽</span>
+                            <div class="metric-info">
+                                <span class="metric-label">Estimated Fuel Saved</span>
+                                <span id="fuelSaved" class="metric-value">₹0.00</span>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-icon">⏱️</span>
+                            <div class="metric-info">
+                                <span class="metric-label">Time Saved</span>
+                                <span id="timeSaved" class="metric-value">0 mins</span>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-icon">📏</span>
+                            <div class="metric-info">
+                                <span class="metric-label">Distance Saved</span>
+                                <span id="distSaved" class="metric-value">0.00 km</span>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-icon">⭐</span>
+                            <div class="metric-info">
+                                <span class="metric-label">Efficiency Score</span>
+                                <span id="efficiencyScore" class="metric-value">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="charts-container">
+                        <div class="chart-box">
+                            <h3>Distance Comparison</h3>
+                            <canvas id="distanceChart"></canvas>
+                        </div>
+                        <div class="chart-box">
+                            <h3>Optimization Efficiency</h3>
+                            <canvas id="efficiencyChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="performance-summary">
+                        <h3>Optimization Performance</h3>
+                        <p id="perfSummaryText">Awaiting route data...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <!-- Polyline Decorator Plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-polylinedecorator@1.6.0/dist/leaflet.polylineDecorator.min.js"></script>
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
