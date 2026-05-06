@@ -1,10 +1,13 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
 from flasgger import Swagger
 import sys
 import os
 import json
 from dotenv import load_dotenv
 from openai import OpenAI
+from functools import wraps
 
 load_dotenv()
 openai_client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
@@ -16,6 +19,37 @@ from optimizer import find_nearest_neighbor_route
 from distance import haversine_distance
 
 app = Flask(__name__)
+app.secret_key = os.getenv('SECRET_KEY', 'dev-secret-key-change-in-production')
+
+# ─────────────────────────────────────────────
+# Flask-Login Setup
+# ─────────────────────────────────────────────
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'auth_page'
+
+# Simple in-memory user store (replace with database in production)
+users_db = {
+    'demo@routeoptimizer.com': {
+        'id': '1',
+        'name': 'Demo User',
+        'email': 'demo@routeoptimizer.com',
+        'password': generate_password_hash('Demo@1234')
+    }
+}
+
+class User(UserMixin):
+    def __init__(self, id, name, email):
+        self.id = id
+        self.name = name
+        self.email = email
+
+@login_manager.user_loader
+def load_user(user_id):
+    for email, data in users_db.items():
+        if data['id'] == user_id:
+            return User(data['id'], data['name'], data['email'])
+    return None
 
 # ─────────────────────────────────────────────
 # OpenAPI / Swagger configuration
@@ -272,9 +306,82 @@ PREDEFINED_LOCATIONS = [
 # ─────────────────────────────────────────────
 
 @app.route('/')
+@login_required
 def index():
     """Render the main dashboard UI."""
-    return render_template('index.html')
+    return render_template('index.html', user=current_user)
+
+
+# ─────────────────────────────────────────────
+# Authentication Routes
+# ─────────────────────────────────────────────
+
+@app.route('/auth')
+def auth_page():
+    """Render the authentication page."""
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    return render_template('auth.html')
+
+
+@app.route('/auth/login', methods=['POST'])
+def login():
+    """Handle user login."""
+    data = request.get_json()
+    email = data.get('email', '').strip().lower()
+    password = data.get('password', '')
+    remember = data.get('remember', False)
+
+    if not email or not password:
+        return jsonify({"error": "Email and password are required."}), 400
+
+    user_data = users_db.get(email)
+    if not user_data or not check_password_hash(user_data['password'], password):
+        return jsonify({"error": "Invalid email or password."}), 401
+
+    user = User(user_data['id'], user_data['name'], user_data['email'])
+    login_user(user, remember=remember)
+    return jsonify({"success": True, "message": "Login successful"})
+
+
+@app.route('/auth/register', methods=['POST'])
+def register():
+    """Handle user registration."""
+    data = request.get_json()
+    name = data.get('name', '').strip()
+    email = data.get('email', '').strip().lower()
+    password = data.get('password', '')
+
+    if not name or not email or not password:
+        return jsonify({"error": "All fields are required."}), 400
+
+    if len(password) < 6:
+        return jsonify({"error": "Password must be at least 6 characters."}), 400
+
+    if email in users_db:
+        return jsonify({"error": "Email already registered."}), 400
+
+    # Create new user
+    user_id = str(len(users_db) + 1)
+    users_db[email] = {
+        'id': user_id,
+        'name': name,
+        'email': email,
+        'password': generate_password_hash(password)
+    }
+
+    # Auto-login after registration
+    user = User(user_id, name, email)
+    login_user(user)
+    return jsonify({"success": True, "message": "Registration successful"})
+
+
+@app.route('/auth/logout')
+@login_required
+def logout():
+    """Handle user logout."""
+    logout_user()
+    return redirect(url_for('auth_page'))
 
 
 @app.route('/api/health', methods=['GET'])

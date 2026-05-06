@@ -1,6 +1,8 @@
 flask
+flask-login
 flasgger
 numpy
 python-dotenv
 openai
 gunicorn
+werkzeug
