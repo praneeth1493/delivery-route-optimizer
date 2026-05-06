@@ -234,9 +234,10 @@ PREDEFINED_LOCATIONS = [
 
     # ── PHAGWARA / KAPURTHALA ─────────────────────────────────────────────
     {"id": 43, "name": "Phagwara Bus Stand",                 "coords": [31.2200, 75.7700], "priority": "High",   "type": "delivery"},
-    {"id": 44, "name": "Phagwara Industrial Area",           "coords": [31.2300, 75.7900], "priority": "High",   "type": "pickup"},
-    {"id": 45, "name": "Kapurthala Railway Station",         "coords": [31.3800, 75.3800], "priority": "Medium", "type": "pickup"},
-    {"id": 46, "name": "Kapurthala Market",                  "coords": [31.3750, 75.3850], "priority": "Medium", "type": "delivery"},
+    {"id": 44, "name": "Lovely Professional University (LPU)","coords": [31.2520, 75.7050], "priority": "High",   "type": "pickup"},
+    {"id": 45, "name": "Phagwara Industrial Area",           "coords": [31.2300, 75.7900], "priority": "High",   "type": "pickup"},
+    {"id": 46, "name": "Kapurthala Railway Station",         "coords": [31.3800, 75.3800], "priority": "Medium", "type": "pickup"},
+    {"id": 47, "name": "Kapurthala Market",                  "coords": [31.3750, 75.3850], "priority": "Medium", "type": "delivery"},
 
     # ── HOSHIARPUR / NAWANSHAHR ───────────────────────────────────────────
     {"id": 47, "name": "Hoshiarpur Bus Stand",               "coords": [31.5300, 75.9100], "priority": "Medium", "type": "delivery"},
