@@ -272,8 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
             maxZoom: 19
         }).addTo(state.map);
 
-        L.control.zoom({ position: 'bottomright' }).addTo(state.map);
-    };
+        L.control.zoom({ position: 'bottomright' }).addTo(state.map);    };
 
     const renderMarkers = () => {
         state.predefinedLocations.forEach(loc => {
@@ -872,6 +871,49 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'Enter') handleAiChat();
     });
     window.addEventListener('click', (e) => { if (e.target === elements.analyticsModal) elements.analyticsModal.style.display = 'none'; });
+
+    // ── Theme Toggle ──────────────────────────────────────────────────────
+    const themeToggleBtn = document.getElementById('themeToggle');
+    const savedTheme = localStorage.getItem('routeOptimizerTheme') || 'dark';
+
+    const applyTheme = (theme) => {
+        if (theme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            themeToggleBtn.textContent = '☀️';
+            themeToggleBtn.title = 'Switch to Dark Mode';
+            // Switch to light map tiles
+            state.map.eachLayer(layer => {
+                if (layer._url && layer._url.includes('carto')) {
+                    state.map.removeLayer(layer);
+                }
+            });
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; CARTO', maxZoom: 19
+            }).addTo(state.map);
+        } else {
+            document.documentElement.removeAttribute('data-theme');
+            themeToggleBtn.textContent = '🌙';
+            themeToggleBtn.title = 'Switch to Light Mode';
+            // Switch to dark map tiles
+            state.map.eachLayer(layer => {
+                if (layer._url && layer._url.includes('carto')) {
+                    state.map.removeLayer(layer);
+                }
+            });
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; CARTO', maxZoom: 19
+            }).addTo(state.map);
+        }
+        localStorage.setItem('routeOptimizerTheme', theme);
+    };
+
+    themeToggleBtn.addEventListener('click', () => {
+        const current = localStorage.getItem('routeOptimizerTheme') || 'dark';
+        applyTheme(current === 'dark' ? 'light' : 'dark');
+    });
+
+    // Apply saved theme on load (after map is ready)
+    setTimeout(() => applyTheme(savedTheme), 600);
 
     initApp();
 });
