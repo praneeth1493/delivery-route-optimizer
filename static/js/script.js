@@ -11,21 +11,101 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedLocations: [],
         currentRouteLine: null,
         predefinedLocations: [
-            { id: 1, name: "Central Logistics Hub", coords: [30.7333, 76.7794], priority: 'High', type: 'warehouse', icon: '🏢' },
-            { id: 2, name: "Sector 17 Market", coords: [30.7400, 76.7800], priority: 'Medium', type: 'delivery', icon: '📍' },
-            { id: 3, name: "Sukhna Lake", coords: [30.7421, 76.8188], priority: 'High', type: 'pickup', icon: '📦' },
-            { id: 4, name: "Rock Garden", coords: [30.7525, 76.8011], priority: 'Low', type: 'delivery', icon: '📍' },
-            { id: 5, name: "Mohali Cricket Stadium", coords: [30.6908, 76.7371], priority: 'Medium', type: 'pickup', icon: '📦' },
-            { id: 6, name: "Elante Mall", coords: [30.7061, 76.8011], priority: 'High', type: 'pickup', icon: '📦' },
-            { id: 7, name: "Rose Garden", coords: [30.7461, 76.7820], priority: 'Low', type: 'delivery', icon: '📍' },
-            { id: 8, name: "Panjab University", coords: [30.7594, 76.7686], priority: 'Medium', type: 'delivery', icon: '📍' },
-            { id: 9, name: "Chandigarh IT Park", coords: [30.7258, 76.8453], priority: 'High', type: 'pickup', icon: '📦' },
-            { id: 10, name: "Zirakpur Crossing", coords: [30.6425, 76.8175], priority: 'Medium', type: 'delivery', icon: '📍' },
-            { id: 11, name: "Panchkula Sector 5", coords: [30.6942, 76.8497], priority: 'Medium', type: 'delivery', icon: '📍' },
-            { id: 12, name: "Sector 43 Bus Stand", coords: [30.7125, 76.7410], priority: 'High', type: 'pickup', icon: '📦' },
-            { id: 13, name: "Industrial Area Phase 2", coords: [30.6950, 76.7950], priority: 'High', type: 'pickup', icon: '📦' },
-            { id: 14, name: "Kharar Highway Junction", coords: [30.7483, 76.6413], priority: 'Low', type: 'delivery', icon: '📍' },
-            { id: 15, name: "Derabassi Logistics Hub", coords: [30.5900, 76.8400], priority: 'High', type: 'pickup', icon: '📦' }
+            // ── CHANDIGARH / TRICITY ──
+            { id: 1,  name: "Central Logistics Hub (Chandigarh)", coords: [30.7333, 76.7794], priority: 'High',   type: 'warehouse', icon: '🏢' },
+            { id: 2,  name: "Sector 17 Market, Chandigarh",       coords: [30.7400, 76.7800], priority: 'Medium', type: 'delivery',  icon: '📍' },
+            { id: 3,  name: "Elante Mall, Chandigarh",            coords: [30.7061, 76.8011], priority: 'High',   type: 'pickup',    icon: '📦' },
+            { id: 4,  name: "Chandigarh IT Park, Chandigarh",     coords: [30.7258, 76.8453], priority: 'High',   type: 'pickup',    icon: '📦' },
+            { id: 5,  name: "Sector 43 Bus Stand, Chandigarh",    coords: [30.7125, 76.7410], priority: 'High',   type: 'pickup',    icon: '📦' },
+            { id: 6,  name: "Industrial Area Phase 2, Chandigarh",coords: [30.6950, 76.7950], priority: 'High',   type: 'pickup',    icon: '📦' },
+            { id: 7,  name: "Mohali Cricket Stadium, Mohali",     coords: [30.6908, 76.7371], priority: 'Medium', type: 'pickup',    icon: '📦' },
+            { id: 8,  name: "Mohali IT City, Mohali",             coords: [30.7046, 76.7179], priority: 'High',   type: 'pickup',    icon: '📦' },
+            { id: 9,  name: "Phase 8 Industrial, Mohali",         coords: [30.6780, 76.7280], priority: 'High',   type: 'pickup',    icon: '📦' },
+            { id: 10, name: "Zirakpur Market, Zirakpur",          coords: [30.6425, 76.8175], priority: 'Medium', type: 'delivery',  icon: '📍' },
+            { id: 11, name: "Derabassi Logistics Hub, Derabassi", coords: [30.5900, 76.8400], priority: 'High',   type: 'pickup',    icon: '📦' },
+            { id: 12, name: "Kharar Bus Stand, Kharar",           coords: [30.7483, 76.6413], priority: 'Medium', type: 'delivery',  icon: '📍' },
+            { id: 13, name: "Panchkula Sector 5, Panchkula",      coords: [30.6942, 76.8497], priority: 'Medium', type: 'delivery',  icon: '📍' },
+            // ── LUDHIANA ──
+            { id: 14, name: "Ludhiana Railway Station",           coords: [30.9010, 75.8573], priority: 'High',   type: 'pickup',    icon: '📦' },
+            { id: 15, name: "Ludhiana Clock Tower Market",        coords: [30.9000, 75.8500], priority: 'High',   type: 'delivery',  icon: '📍' },
+            { id: 16, name: "Focal Point Industrial, Ludhiana",   coords: [30.8700, 75.8200], priority: 'High',   type: 'pickup',    icon: '📦' },
+            { id: 17, name: "Sahnewal Airport, Ludhiana",         coords: [30.8547, 75.9560], priority: 'Medium', type: 'pickup',    icon: '📦' },
+            { id: 18, name: "Gill Road Warehouse, Ludhiana",      coords: [30.8800, 75.8900], priority: 'High',   type: 'pickup',    icon: '📦' },
+            { id: 19, name: "Pakhowal Road Market, Ludhiana",     coords: [30.8950, 75.8650], priority: 'Medium', type: 'delivery',  icon: '📍' },
+            { id: 20, name: "Doraha Logistics, Ludhiana",         coords: [30.7950, 76.0300], priority: 'Medium', type: 'pickup',    icon: '📦' },
+            // ── AMRITSAR ──
+            { id: 21, name: "Golden Temple, Amritsar",            coords: [31.6200, 74.8765], priority: 'High',   type: 'delivery',  icon: '📍' },
+            { id: 22, name: "Amritsar Railway Station",           coords: [31.6340, 74.8723], priority: 'High',   type: 'pickup',    icon: '📦' },
+            { id: 23, name: "Sri Guru Ram Dass Airport, Amritsar",coords: [31.7096, 74.7973], priority: 'High',   type: 'pickup',    icon: '📦' },
+            { id: 24, name: "Hall Bazaar, Amritsar",              coords: [31.6180, 74.8780], priority: 'Medium', type: 'delivery',  icon: '📍' },
+            { id: 25, name: "Industrial Area B, Amritsar",        coords: [31.6500, 74.8300], priority: 'High',   type: 'pickup',    icon: '📦' },
+            { id: 26, name: "Majitha Road Warehouse, Amritsar",   coords: [31.6700, 74.9100], priority: 'Medium', type: 'pickup',    icon: '📦' },
+            // ── JALANDHAR ──
+            { id: 27, name: "Jalandhar City Railway Station",     coords: [31.3260, 75.5762], priority: 'High',   type: 'pickup',    icon: '📦' },
+            { id: 28, name: "Jalandhar Bus Stand",                coords: [31.3200, 75.5800], priority: 'High',   type: 'delivery',  icon: '📍' },
+            { id: 29, name: "Focal Point Industrial, Jalandhar",  coords: [31.3500, 75.6200], priority: 'High',   type: 'pickup',    icon: '📦' },
+            { id: 30, name: "Nakodar Road Market, Jalandhar",     coords: [31.3000, 75.6100], priority: 'Medium', type: 'delivery',  icon: '📍' },
+            { id: 31, name: "Leather Complex, Jalandhar",         coords: [31.3600, 75.5900], priority: 'High',   type: 'pickup',    icon: '📦' },
+            // ── PATIALA ──
+            { id: 32, name: "Patiala Railway Station",            coords: [30.3398, 76.3869], priority: 'High',   type: 'pickup',    icon: '📦' },
+            { id: 33, name: "Patiala Bus Stand",                  coords: [30.3350, 76.3900], priority: 'High',   type: 'delivery',  icon: '📍' },
+            { id: 34, name: "Sirhind Road Industrial, Patiala",   coords: [30.3600, 76.4200], priority: 'High',   type: 'pickup',    icon: '📦' },
+            { id: 35, name: "Leela Bhawan Market, Patiala",       coords: [30.3300, 76.3800], priority: 'Medium', type: 'delivery',  icon: '📍' },
+            { id: 36, name: "Rajpura Logistics Hub, Rajpura",     coords: [30.4800, 76.5900], priority: 'High',   type: 'pickup',    icon: '📦' },
+            // ── BATHINDA ──
+            { id: 37, name: "Bathinda Railway Station",           coords: [30.2110, 74.9455], priority: 'High',   type: 'pickup',    icon: '📦' },
+            { id: 38, name: "Bathinda Bus Stand",                 coords: [30.2100, 74.9500], priority: 'High',   type: 'delivery',  icon: '📍' },
+            { id: 39, name: "HPCL Refinery, Bathinda",            coords: [30.1800, 74.9200], priority: 'High',   type: 'pickup',    icon: '📦' },
+            { id: 40, name: "Bathinda Industrial Area",           coords: [30.2300, 74.9700], priority: 'High',   type: 'pickup',    icon: '📦' },
+            // ── PHAGWARA / KAPURTHALA ──
+            { id: 41, name: "Phagwara Bus Stand",                 coords: [31.2200, 75.7700], priority: 'High',   type: 'delivery',  icon: '📍' },
+            { id: 42, name: "Phagwara Industrial Area",           coords: [31.2300, 75.7900], priority: 'High',   type: 'pickup',    icon: '📦' },
+            { id: 43, name: "Kapurthala Railway Station",         coords: [31.3800, 75.3800], priority: 'Medium', type: 'pickup',    icon: '📦' },
+            { id: 44, name: "Kapurthala Market",                  coords: [31.3750, 75.3850], priority: 'Medium', type: 'delivery',  icon: '📍' },
+            // ── HOSHIARPUR / NAWANSHAHR ──
+            { id: 45, name: "Hoshiarpur Bus Stand",               coords: [31.5300, 75.9100], priority: 'Medium', type: 'delivery',  icon: '📍' },
+            { id: 46, name: "Hoshiarpur Industrial Area",         coords: [31.5400, 75.9300], priority: 'High',   type: 'pickup',    icon: '📦' },
+            { id: 47, name: "Nawanshahr Market",                  coords: [31.1200, 76.1200], priority: 'Medium', type: 'delivery',  icon: '📍' },
+            // ── GURDASPUR / PATHANKOT ──
+            { id: 48, name: "Gurdaspur Bus Stand",                coords: [32.0400, 75.4100], priority: 'Medium', type: 'delivery',  icon: '📍' },
+            { id: 49, name: "Pathankot Railway Station",          coords: [32.2700, 75.6500], priority: 'High',   type: 'pickup',    icon: '📦' },
+            { id: 50, name: "Pathankot Industrial Area",          coords: [32.2800, 75.6700], priority: 'High',   type: 'pickup',    icon: '📦' },
+            // ── FIROZPUR / FAZILKA ──
+            { id: 51, name: "Firozpur City Market",               coords: [30.9200, 74.6000], priority: 'Medium', type: 'delivery',  icon: '📍' },
+            { id: 52, name: "Fazilka Bus Stand",                  coords: [30.4000, 74.0300], priority: 'Medium', type: 'delivery',  icon: '📍' },
+            { id: 53, name: "Abohar Market",                      coords: [30.1400, 74.1900], priority: 'Medium', type: 'delivery',  icon: '📍' },
+            // ── SANGRUR / BARNALA ──
+            { id: 54, name: "Sangrur Bus Stand",                  coords: [30.2500, 75.8400], priority: 'Medium', type: 'delivery',  icon: '📍' },
+            { id: 55, name: "Sangrur Industrial Area",            coords: [30.2600, 75.8600], priority: 'High',   type: 'pickup',    icon: '📦' },
+            { id: 56, name: "Barnala Bus Stand",                  coords: [30.3800, 75.5500], priority: 'Medium', type: 'delivery',  icon: '📍' },
+            { id: 57, name: "Barnala Grain Market",               coords: [30.3750, 75.5450], priority: 'High',   type: 'pickup',    icon: '📦' },
+            // ── MOGA / FARIDKOT ──
+            { id: 58, name: "Moga Bus Stand",                     coords: [30.8200, 75.1700], priority: 'Medium', type: 'delivery',  icon: '📍' },
+            { id: 59, name: "Moga Industrial Area",               coords: [30.8300, 75.1900], priority: 'High',   type: 'pickup',    icon: '📦' },
+            { id: 60, name: "Faridkot Bus Stand",                 coords: [30.6700, 74.7600], priority: 'Medium', type: 'delivery',  icon: '📍' },
+            { id: 61, name: "Faridkot Grain Market",              coords: [30.6650, 74.7550], priority: 'High',   type: 'pickup',    icon: '📦' },
+            // ── MUKTSAR / MALOUT ──
+            { id: 62, name: "Sri Muktsar Sahib Bus Stand",        coords: [30.4800, 74.5200], priority: 'Medium', type: 'delivery',  icon: '📍' },
+            { id: 63, name: "Malout Market",                      coords: [30.2000, 74.4800], priority: 'Medium', type: 'delivery',  icon: '📍' },
+            // ── ROPAR / MORINDA ──
+            { id: 64, name: "Ropar Bus Stand",                    coords: [30.9700, 76.5200], priority: 'Medium', type: 'delivery',  icon: '📍' },
+            { id: 65, name: "Ropar Industrial Area",              coords: [30.9800, 76.5400], priority: 'High',   type: 'pickup',    icon: '📦' },
+            { id: 66, name: "Morinda Market",                     coords: [30.7900, 76.4900], priority: 'Medium', type: 'delivery',  icon: '📍' },
+            { id: 67, name: "Anandpur Sahib",                     coords: [31.2400, 76.5000], priority: 'Low',    type: 'delivery',  icon: '📍' },
+            // ── FATEHGARH SAHIB / SIRHIND ──
+            { id: 68, name: "Fatehgarh Sahib Bus Stand",          coords: [30.6500, 76.3900], priority: 'Medium', type: 'delivery',  icon: '📍' },
+            { id: 69, name: "Sirhind Industrial Area",            coords: [30.6300, 76.3800], priority: 'High',   type: 'pickup',    icon: '📦' },
+            { id: 70, name: "Mandi Gobindgarh Steel Market",      coords: [30.6700, 76.3100], priority: 'High',   type: 'pickup',    icon: '📦' },
+            // ── TARN TARAN ──
+            { id: 71, name: "Tarn Taran Bus Stand",               coords: [31.4500, 74.9300], priority: 'Medium', type: 'delivery',  icon: '📍' },
+            // ── HIGHWAY JUNCTIONS ──
+            { id: 72, name: "Khanna Grain Market",                coords: [30.7050, 76.2200], priority: 'High',   type: 'pickup',    icon: '📦' },
+            { id: 73, name: "Samrala Market",                     coords: [30.8400, 76.1900], priority: 'Medium', type: 'delivery',  icon: '📍' },
+            { id: 74, name: "Phillaur Bridge Junction",           coords: [31.0200, 75.7900], priority: 'Medium', type: 'delivery',  icon: '📍' },
+            { id: 75, name: "Nakodar Market",                     coords: [31.1300, 75.4700], priority: 'Medium', type: 'delivery',  icon: '📍' },
+            { id: 76, name: "Sultanpur Lodhi",                    coords: [31.2100, 75.1900], priority: 'Low',    type: 'delivery',  icon: '📍' },
+            { id: 77, name: "Nangal Township",                    coords: [31.4900, 76.3700], priority: 'Medium', type: 'delivery',  icon: '📍' },
+            { id: 78, name: "Rupnagar Grain Market",              coords: [30.9650, 76.5250], priority: 'High',   type: 'pickup',    icon: '📦' },
         ],
         analytics: {
             distanceChart: null,
@@ -183,8 +263,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const initMap = () => {
         state.map = L.map('map', {
             zoomControl: false,
-            center: [30.72, 76.78],
-            zoom: 12
+            center: [31.1471, 75.3412],
+            zoom: 8
         });
 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
@@ -606,36 +686,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Define realistic road-based paths around Chandigarh hotspots
         const trafficPaths = [
-            { 
-                name: "Madhya Marg",
-                path: [[30.7333, 76.7794], [30.7400, 76.7800], [30.7450, 76.7900], [30.7500, 76.8000]], 
-                color: '#ef4444', // Red - Heavy
-                speed: 0.002
+            {
+                name: "NH-44 Chandigarh-Ludhiana",
+                path: [[30.7333, 76.7794], [30.7950, 76.5000], [30.8400, 76.1900], [30.9010, 75.8573]],
+                color: '#ef4444', speed: 0.002
             },
-            { 
-                name: "Dakshin Marg",
-                path: [[30.7061, 76.8011], [30.7150, 76.8200], [30.7258, 76.8453]], 
-                color: '#f59e0b', // Yellow - Medium
-                speed: 0.004
+            {
+                name: "NH-44 Ludhiana-Jalandhar",
+                path: [[30.9010, 75.8573], [31.0200, 75.7900], [31.3260, 75.5762]],
+                color: '#f59e0b', speed: 0.003
             },
-            { 
-                name: "Sukhna Path",
-                path: [[30.7525, 76.8011], [30.7480, 76.8100], [30.7421, 76.8188]], 
-                color: '#22c55e', // Green - Low
-                speed: 0.007
+            {
+                name: "NH-44 Jalandhar-Amritsar",
+                path: [[31.3260, 75.5762], [31.4500, 75.2000], [31.6200, 74.8765]],
+                color: '#ef4444', speed: 0.002
             },
-            { 
-                name: "Jan Marg",
-                path: [[30.7400, 76.7800], [30.7200, 76.7700], [30.7000, 76.7600]], 
-                color: '#f59e0b', // Yellow
-                speed: 0.005
+            {
+                name: "NH-7 Chandigarh-Patiala",
+                path: [[30.7333, 76.7794], [30.6500, 76.5500], [30.4800, 76.5900], [30.3398, 76.3869]],
+                color: '#f59e0b', speed: 0.004
             },
-            { 
-                name: "Zirakpur-Shimla Highway",
-                path: [[30.6425, 76.8175], [30.6600, 76.8000], [30.6800, 76.8200]], 
-                color: '#ef4444', // Red - Heavy
-                speed: 0.003
-            }
+            {
+                name: "NH-54 Ludhiana-Bathinda",
+                path: [[30.9010, 75.8573], [30.7050, 76.2200], [30.3800, 75.5500], [30.2110, 74.9455]],
+                color: '#22c55e', speed: 0.005
+            },
+            {
+                name: "NH-3 Pathankot-Jalandhar",
+                path: [[32.2700, 75.6500], [32.0400, 75.4100], [31.5300, 75.9100], [31.3260, 75.5762]],
+                color: '#f59e0b', speed: 0.004
+            },
         ];
 
         trafficPaths.forEach(config => {
@@ -701,7 +781,7 @@ document.addEventListener('DOMContentLoaded', () => {
         state.markers.forEach(({ marker }) => marker.setOpacity(1));
         elements.locationSearch.value = '';
         elements.analyticsBtn.style.display = 'none';
-        state.map.setView([30.72, 76.78], 12);
+        state.map.setView([31.1471, 75.3412], 8);
         updateUI();
         updateStatus('System Reset: Awaiting Input');
     };
